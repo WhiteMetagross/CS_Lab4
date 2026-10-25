@@ -1,0 +1,29 @@
+{
+  "name": "iiita-web-server-security-v2",
+  "version": "1.0.0",
+  "description": "IIIT Allahabad Open Source Community Forum: Web Server Security Hardened Defended Edition",
+  "main": "server/server.js",
+  "scripts": {
+    "start": "node server/server.js",
+    "build": "npm --prefix client run build",
+    "dev:client": "npm --prefix client run dev",
+    "dev:server": "node server/server.js"
+  },
+  "keywords": [
+    "web-security",
+    "sql-injection-defense",
+    "command-injection-defense",
+    "xss-defense",
+    "csrf-defense",
+    "iiit-allahabad"
+  ],
+  "author": "IIB2024017",
+  "license": "MIT",
+  "dependencies": {
+    "bcryptjs": "^2.4.3",
+    "cookie-parser": "^1.4.7",
+    "cors": "^2.8.5",
+    "express": "^4.21.2",
+    "jsonwebtoken": "^9.0.2"
+  }
+}

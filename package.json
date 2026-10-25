@@ -1,0 +1,21 @@
+{
+  "name": "iiita-web-server-security",
+  "version": "1.0.0",
+  "description": "IIIT Allahabad Open Source Community Forum: Web Server Security Exploitation and Mitigation of Four Vulnerability Categories",
+  "scripts": {
+    "start:v1": "node IIITAOSCommunityForumV1/server/server.js",
+    "start:v2": "node IIITAOSCommunityForumV2/server/server.js",
+    "build:v1": "npm --prefix IIITAOSCommunityForumV1/client run build",
+    "build:v2": "npm --prefix IIITAOSCommunityForumV2/client run build"
+  },
+  "keywords": [
+    "cybersecurity",
+    "sql-injection",
+    "command-injection",
+    "xss",
+    "csrf",
+    "iiit-allahabad"
+  ],
+  "author": "IIB2024017",
+  "license": "MIT"
+}

@@ -1,0 +1,13 @@
+# Dependency directories
+node_modules/
+*/node_modules/
+*/*/node_modules/
+
+# Logs and system artifacts
+*.log
+.DS_Store
+Thumbs.db
+
+# SQLite database local instances
+forum.db
+*/forum.db
