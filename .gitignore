@@ -11,3 +11,6 @@ Thumbs.db
 # SQLite database local instances
 forum.db
 */forum.db
+
+# Untracked examination resources
+VivaQuestions.md

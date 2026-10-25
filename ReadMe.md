@@ -34,7 +34,6 @@
 2. `Explainations.md`: In depth technical deep dive covering vulnerability theory, root causes, exploit mechanics, multi layered defenses, and slide mitigation concepts.
 3. `Vulnerable.md`: Exhaustive attack guide and vulnerability analysis for Version 1.
 4. `Defended.md`: Comprehensive defense architectural breakdown for Version 2.
-5. `VivaQuestions.md`: Complete viva examination preparation guide covering 25 detailed questions and answers across all four categories.
 
 ## 4. Technology Stack:
 1. Runtime Environment: Node.js version 22 LTS execution environment.
@@ -102,9 +101,3 @@ npm start
 
 ### 7.3 Restoring Seed Data:
 1. If database state needs resetting at any point, send a POST request to `/api/admin/reset-db` on the corresponding server port.
-
-## 8. Summary of Additional Documentation Files:
-1. Please read `DemoScript.md` for the comprehensive video demonstration transcript.
-2. Please read `Explainations.md` for in depth theoretical and architectural explanations.
-3. Please read `Vulnerable.md` and `Defended.md` for detailed attack and defense manuals.
-4. Please read `VivaQuestions.md` for comprehensive viva exam preparation.
