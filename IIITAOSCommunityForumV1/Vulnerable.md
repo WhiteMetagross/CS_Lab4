@@ -87,16 +87,13 @@ scripts.forEach((oldScript) => {
 4. Reflected Query Flaw: In `ForumView.jsx`, search queries are reflected directly into the page through `ContentRenderer`.
 
 ### 4.2 Exploitation Walkthroughs:
-1. Variant 1 Stored XSS:
-   On `http://localhost:3000`, click Start Discussion.
-   Set Title to `Campus Security Update`.
-   Set Content to `<img src="invalid" onerror="alert('Stored XSS Executed on Session: ' + document.cookie)" />`.
-   Publish the discussion.
-   Result: The payload is stored in the database. Whenever any visitor opens the discussion topic, the image error event triggers and displays the active session cookie in an alert dialog.
-2. Variant 2 Reflected XSS:
-   On `http://localhost:3000`, enter `<img src="x" onerror="alert('Reflected XSS Execution')">` in the discussion search field.
-   Click Search.
-   Result: The reflected search notice renders the image tag into the DOM, executing the script immediately.
+1. Variant 1 Stored XSS (Interactive DOM and Session Takeover):
+   On `http://localhost:3000`, open pre-seeded Post 4: `Security Showcase: Interactive DOM Manipulation and Session Audit`, or click Start Discussion and submit an interactive DOM takeover payload.
+   Result: The payload executes directly in the victim browser context. It extracts ambient session state and cookies into an injected control panel, manipulates the top navigation bar header by appending an animated `DOM HIJACKED BY XSS` badge, and provides interactive triggers to live-invert the page styling and spawn custom notification toasts.
+2. Variant 2 Reflected XSS via Disguised Free Swag Phishing Ad:
+   On `http://localhost:3000`, observe the dedicated student giveaway advertisement below the search bar: `Claim Free IIIT-A Student Developer Swag Kit & AI Credits!`.
+   Click `Claim Free Swag Kit Now ->` or open the external simulated phishing portal at `http://localhost:3000/attackerPhishingAd.html`.
+   Result: The crafted link passes the XSS payload inside the `search` query parameter. Because Version 1 reflects the query unescaped into `innerHTML`, the image error handler executes and spawns the red `Reflected XSS Executed` alert box directly beneath the search input.
 
 ## 5. Category 4: Cross Site Request Forgery (CSRF) Vulnerabilities:
 
@@ -113,13 +110,15 @@ router.post('/profile', authenticate, handleProfileUpdate);
 ```
 3. Cookie Configuration Flaw: Session cookies are issued without `SameSite: strict` directives.
 4. Discussion Deletion via GET Flaw: In `server/routes/posts.js`, the endpoint `GET /api/posts/delete-by-get` executes deletions on GET requests.
+5. In-App Disguised Delivery Vector: Promotional ad cards for `CloudSphere Student Partner Credits` are embedded in the forum sidebar and discussion feed, facilitating accidental or lured clicks that open the attacker exploit portal.
 
 ### 5.2 Exploitation Walkthroughs:
-1. Variant 1 GET Based Forged Action:
+1. Variant 1 POST Based Forged Action via Disguised Campus Ad:
    Log in as Administrator Mridankan Mandal on `http://localhost:3000`.
-   In another browser tab, open the external attacker page `http://localhost:3000/attackerCsrfGetExploit.html`.
-   Result: An embedded `<img src="http://localhost:3000/api/posts/delete-by-get?id=3" />` fires with ambient cookies, deleting discussion topic 3 without victim knowledge.
-2. Variant 2 POST Based Forged Action:
+   On the forum home page, observe the sponsored campus partner ad in the sidebar offering free cloud compute credits.
+   Click on the ad card or `Claim Student Credits Now ->`, which opens `http://localhost:3000/attackerCsrfExploit.html`.
+   Result: The external portal automatically dispatches an unauthorized POST request to `/api/auth/profile` using the browser ambient cookie. Returning to Member Profiles on the forum reveals that the administrator biography was completely hijacked.
+2. Variant 2 GET Based Forged Action via Voucher Link:
    Keep the authenticated administrator session open on `http://localhost:3000`.
-   In a separate tab, open `http://localhost:3000/attackerCsrfExploit.html`.
-   Result: An auto submitting hidden HTML form posts forged profile fields to `/api/auth/profile`. Returning to the forum reveals that the administrator biography was completely hijacked.
+   Click the disguised campus domain voucher link leading to `http://localhost:3000/attackerCsrfGetExploit.html`.
+   Result: An embedded image or button dispatches a forged GET request to `/api/posts/delete-by-get?id=3` with ambient cookies, deleting discussion topic 3 without victim knowledge or consent.

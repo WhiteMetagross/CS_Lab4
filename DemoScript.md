@@ -26,7 +26,7 @@
 7. Version 2 runs on port 5000 and implements multi layered defenses protecting against every attack variant.
 8. Each team member will now demonstrate their assigned category on both versions.
 
-## Act 2: SQL Injection Exploitation and Defense by Aditya Pachauri (2.5 Minutes):
+## Act 2: SQL Injection Exploitation and Defense by Dhannu Ram Meena (2.5 Minutes):
 
 ### Screen Action:
 1. On Version 1 at `http://localhost:3000`, open the Account Login dialog.
@@ -42,7 +42,7 @@
 11. Show the query rejection and open `IIITAOSCommunityForumV2/server/routes/auth.js` to highlight parameterized prepared statements and allow list regex validation.
 
 ### Narration:
-1. I am Aditya Pachauri, roll number IIB2024001, and I am demonstrating the SQL Injection category.
+1. I am Dhannu Ram Meena, roll number IIB2024033, and I am demonstrating the SQL Injection category.
 2. In Version 1, user credentials and search queries are concatenated directly into raw SQL query strings.
 3. When I submit the username `mridankan' --`, the single quote breaks out of the string literal and the double dash comments out the remainder of the query.
 4. The database authenticates the administrator record immediately, bypassing the password check entirely.
@@ -82,7 +82,7 @@
 10. Third, background archiver targets are validated against a static array of predefined approved identifiers.
 11. On Version 2, any injected command is blocked at the perimeter without reaching the operating system.
 
-## Act 4: Cross Site Scripting Exploitation and Defense by Dhannu Ram Meena (2.5 Minutes):
+## Act 4: Cross Site Scripting Exploitation and Defense by Mridankan Mandal (2.5 Minutes):
 
 ### Screen Action:
 1. On Version 1 at `http://localhost:3000`, navigate to Discussions and click on Post 4: `Security Showcase: Interactive DOM Manipulation and Session Audit`.
@@ -102,7 +102,7 @@
 15. Inspect the network response headers in developer tools to highlight the Content Security Policy header.
 
 ### Narration:
-1. I am Dhannu Ram Meena, roll number IIB2024033, and I am demonstrating the Cross Site Scripting category.
+1. I am Mridankan Mandal, roll number IIB2024017, and I am demonstrating the Cross Site Scripting category.
 2. In Version 1, user submitted posts, comments, and search reflections are rendered directly into the DOM using `innerHTML` without sanitization.
 3. Rather than demonstrating trivial alert dialogs, our stored XSS payload establishes interactive DOM and session takeover.
 4. When a user opens the discussion, the injected payload extracts ambient session cookies, intercepts the navigation bar to append an animated takeover badge, and exposes interactive controls that invert site themes and spawn custom notification toasts.
@@ -117,7 +117,7 @@
 13. Fourth, session cookies are configured with `HttpOnly: true`, preventing JavaScript from reading session identifiers even in the event of an injection.
 14. On Version 2, both stored XSS and phishing delivered reflected XSS vectors are completely neutralized, keeping the interface clean and secure.
 
-## Act 5: Cross Site Request Forgery Exploitation and Defense by Mridankan Mandal (2.5 Minutes):
+## Act 5: Cross Site Request Forgery Exploitation and Defense by Aditya Pachauri (2.5 Minutes):
 
 ### Screen Action:
 1. On Version 1 at `http://localhost:3000`, log in as Dr. Mridankan Mandal (username `mridankan`, password `mridankan123`).
@@ -136,7 +136,7 @@
 14. Return to Version 2 Member Profiles and confirm the biography remains unchanged.
 
 ### Narration:
-1. I am Mridankan Mandal, roll number IIB2024017, and I am demonstrating the Cross Site Request Forgery category.
+1. I am Aditya Pachauri, roll number IIB2024001, and I am demonstrating the Cross Site Request Forgery category.
 2. In Version 1, the backend processes state changing profile updates and post deletions relying purely on ambient browser session cookies.
 3. To demonstrate real world attack delivery, we embedded a disguised campus partner advertisement directly on the forum website offering free cloud compute credits.
 4. When a logged-in user accidentally clicks the ad while navigating discussions, the browser opens the promotional portal.

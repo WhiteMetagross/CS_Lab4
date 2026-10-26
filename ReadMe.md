@@ -6,11 +6,14 @@
 3. Ankit Ekka: IIB2024012.
 4. Dhannu Ram Meena: IIB2024033.
 
-## 1. Table 3: Individual Member Ownership Declaration:
-1. Member Name: Mridankan Mandal. Roll Number: IIB2024017. Category: Cross Site Request Forgery (CSRF). Variant Implemented: Variant 2 POST based forged action with auto submitting form and Variant 1 GET based forged action.
-2. Member Name: Aditya Pachauri. Roll Number: IIB2024001. Category: SQL Injection. Variant Implemented: Variant 1 Authentication bypass and Variant 2 UNION based data extraction.
-3. Member Name: Ankit Ekka. Roll Number: IIB2024012. Category: OS Command Injection. Variant Implemented: Variant 1 In band command output returned and Variant 2 Blind time based command injection.
-4. Member Name: Dhannu Ram Meena. Roll Number: IIB2024033. Category: Cross Site Scripting (XSS). Variant Implemented: Variant 1 Stored XSS and Variant 2 Reflected XSS.
+## 1. Individual Member Task Allocation Table:
+
+| Member Name | Roll Number | Vulnerability Category | Implemented Attack Variants | Implemented Defense Architecture |
+| :--- | :--- | :--- | :--- | :--- |
+| Aditya Pachauri | IIB2024001 | Cross Site Request Forgery (CSRF) | Variant 1: POST Based Forged Action via Disguised Campus Ad<br>Variant 2: GET Based Forged Action via Voucher Link | Cryptographic Anti CSRF Synchronizer Tokens, Strict SameSite and HttpOnly Cookies, Origin and Referer Header Verification, Rejection of State Changing GET Requests with HTTP 405 |
+| Mridankan Mandal | IIB2024017 | Cross Site Scripting (XSS) | Variant 1: Stored XSS Interactive DOM and Session Takeover<br>Variant 2: Reflected XSS via Disguised Free Swag Phishing Ad | DOMPurify HTML Sanitization, React Framework Auto Escaping, HTTP Content Security Policy (CSP) Headers, HttpOnly Session Cookies |
+| Dhannu Ram Meena | IIB2024033 | SQL Command Injection (SQL Injection) | Variant 1: Authentication Login Bypass<br>Variant 2: UNION Based Sensitive Data Extraction | Parameterized Prepared Statements (`db.prepare`), Strict Alphanumeric Regular Expression Whitelisting, Safe Generic Error Messages |
+| Ankit Ekka | IIB2024012 | OS Command Injection | Variant 1: In Band Diagnostic Command Output Execution<br>Variant 2: Blind Time Based Diagnostics Archiver Delay | Avoiding the Shell via `child_process.execFile` with Argument Vectors, Host Regex Allow List Enforcement, Static Whitelist Mapping for Background Tasks |
 
 ## 2. Project Introduction:
 1. This repository contains the complete implementation, vulnerability exploitation evidence, and multi layered defense remediation for the IIIT Allahabad Open Source Community Forum web application.

@@ -70,8 +70,8 @@ containerRef.current.innerHTML = cleanHtml;
 6. HttpOnly Session Cookies: In `server/routes/auth.js`, session cookies are marked `httpOnly: true`, preventing JavaScript from reading session cookies.
 
 ### 4.2 Attack Neutralization Evidence:
-1. Stored XSS Attempt: Discussion topics containing `<img src="invalid" onerror="alert(document.cookie)" />` have the `onerror` attribute stripped by DOMPurify. No script executes when viewed.
-2. Reflected XSS Attempt: Searching for `<img src=x onerror=alert('Reflected XSS')>` renders safely as plain text on the page without triggering script execution.
+1. Stored XSS Attempt: Opening Post 4 `Security Showcase: Interactive DOM Manipulation and Session Audit` proves complete defense. DOMPurify strips the script tags, image error handlers, and dangerous attributes. The navigation bar title remains untouched, no theme inversion or toasts can be triggered, and `HttpOnly` cookies cannot be accessed.
+2. Reflected XSS Attempt via Free Swag Phishing Ad: Clicking the disguised free developer swag giveaway phishing ad or navigating via `attackerPhishingAd.html` fails to execute. The backend validates search characters and React JSX auto-escaping safely renders the payload as harmless text, preventing all client-side script execution.
 
 ## 5. Category 4: Cross Site Request Forgery (CSRF) Multi Layered Defenses:
 
@@ -96,7 +96,8 @@ function verifyCsrf(req, res, next) {
 3. Strict SameSite Cookies: Cookies are issued with `sameSite: 'strict'` and `httpOnly: true`.
 4. Origin and Referer Header Verification: Requests from foreign origins are blocked with HTTP 403 Forbidden.
 5. Rejection of State Changing GET Requests: The endpoint `GET /api/posts/delete-by-get` returns HTTP 405 Method Not Allowed.
+6. Embedded Disguised Ad Neutralization: Even when a user accidentally clicks the promotional campus partner ad card on `http://localhost:5000`, the resulting cross-origin request sent by `attackerCsrfExploit.html` is rejected with HTTP 403 Forbidden.
 
 ### 5.2 Attack Neutralization Evidence:
-1. POST Auto Submitting Form Attempt: Opening `attackerCsrfExploit.html` against port 5000 results in HTTP 403 Forbidden because external pages cannot guess the Anti CSRF token and `SameSite: strict` withholds the session cookie.
-2. GET Based Action Attempt: Opening `attackerCsrfGetExploit.html` against port 5000 results in HTTP 405 Method Not Allowed. The discussion remains completely safe.
+1. Disguised Ad POST Exploit Attempt: Clicking the promotional campus partner ad and submitting the forged profile update on `attackerCsrfExploit.html` against port 5000 results in HTTP 403 Forbidden. The Anti CSRF token is missing and `SameSite: strict` withholds the session cookie. The administrator biography remains unchanged.
+2. GET Based Voucher Action Attempt: Opening `attackerCsrfGetExploit.html` against port 5000 results in HTTP 405 Method Not Allowed. The discussion remains completely safe.
