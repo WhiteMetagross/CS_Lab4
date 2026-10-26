@@ -91,27 +91,31 @@
 4. Point out the extracted ambient session tokens and cookies displayed within the injected control panel widget.
 5. Click the interactive button `Toggle Theme Inversion` to demonstrate live page color manipulation through injected JavaScript.
 6. Click `Spawn Injected Alert Toast` to demonstrate dynamic UI injection spawning a floating notification toast.
-7. Return to the main discussion feed, go to the search bar, and input `<img src="x" onerror="var t=document.createElement('div');t.style='margin:10px 0;padding:12px;background:#ef4444;color:#fff;border-radius:6px;font-weight:700;';t.innerText='Reflected XSS Execution: Search Parameter Executed Arbitrary JavaScript';this.parentNode.appendChild(t);" />`.
-8. Click Search and demonstrate reflected XSS dynamically injecting an error banner directly below the search form.
-9. Open `IIITAOSCommunityForumV1/client/src/components/ContentRenderer.jsx` and `ForumView.jsx` to highlight unescaped `innerHTML` rendering.
-10. Switch to Version 2 at `http://localhost:5000`.
-11. Open Post 4 and demonstrate that DOMPurify sanitized the content completely: the navbar brand title remains pristine and un-tampered, no scripts execute, and no toasts appear.
-12. Search for the reflected XSS payload on Version 2 and show that React framework auto escaping safely rendered the query as pure text.
-13. Inspect the network response headers in developer tools to highlight the Content Security Policy header.
+7. Return to the main discussion feed and point out the dedicated disguised phishing ad placed directly beneath the search bar: `Career Sponsor: Search 2026 Student Engineering Stipends`.
+8. Explain that because reflected XSS attacks in the real world require phishing delivery, this ad disguises a malicious query link.
+9. Click the button `Search Stipends (Phishing Ad) ->` or navigate to `http://localhost:3000/attackerPhishingAd.html` to simulate an external phishing link.
+10. Demonstrate reflected XSS execution in Version 1, displaying the red glowing `Reflected XSS Executed` alert box below the search bar.
+11. Open `IIITAOSCommunityForumV1/client/src/components/ContentRenderer.jsx` and `ForumView.jsx` to highlight unescaped `innerHTML` rendering.
+12. Switch to Version 2 at `http://localhost:5000`.
+13. Open Post 4 and demonstrate that DOMPurify sanitized the content completely: the navbar brand title remains pristine and un-tampered, no scripts execute, and no toasts appear.
+14. Click the disguised search phishing ad on Version 2 and show that React framework auto escaping safely rendered the query as pure text, preventing all execution.
+15. Inspect the network response headers in developer tools to highlight the Content Security Policy header.
 
 ### Narration:
 1. I am Dhannu Ram Meena, roll number IIB2024033, and I am demonstrating the Cross Site Scripting category.
 2. In Version 1, user submitted posts, comments, and search reflections are rendered directly into the DOM using `innerHTML` without sanitization.
 3. Rather than demonstrating trivial alert dialogs, our stored XSS payload establishes interactive DOM and session takeover.
 4. When a user opens the discussion, the injected payload extracts ambient session cookies, intercepts the navigation bar to append an animated takeover badge, and exposes interactive controls that invert site themes and spawn custom notification toasts.
-5. In addition, search inputs reflected into `innerHTML` allow an attacker to inject custom UI banners into the page via reflected XSS.
-6. The root cause is rendering untrusted user input directly into executable DOM sinks without contextual sanitization.
-7. In Version 2, we implemented multiple layers of defense.
-8. First, `ContentRenderer.jsx` sanitizes all markup using DOMPurify, stripping script tags, error handlers, and dangerous attributes.
-9. Second, reflected search terms are rendered strictly through React JSX text nodes, leveraging framework auto escaping.
-10. Third, the Express backend sends a strict Content Security Policy HTTP header restricting script execution to authorized origin scripts.
-11. Fourth, session cookies are configured with `HttpOnly: true`, preventing JavaScript from reading session identifiers even in the event of an injection.
-12. On Version 2, both stored and reflected XSS vectors are completely neutralized, keeping the interface clean and secure.
+5. Furthermore, to demonstrate how reflected XSS occurs in realistic threat scenarios through phishing and social engineering, we created a dedicated disguised search sponsorship ad offering engineering stipends.
+6. When the victim clicks this disguised ad on the forum, or clicks a crafted link in our simulated phishing portal `attackerPhishingAd.html`, the malicious script is transmitted in the URL query parameter.
+7. Because Version 1 reflects query parameters directly into `innerHTML`, the injected script executes immediately, creating a floating alert banner.
+8. The root cause is rendering untrusted user input directly into executable DOM sinks without contextual sanitization.
+9. In Version 2, we implemented multiple layers of defense.
+10. First, `ContentRenderer.jsx` sanitizes all markup using DOMPurify, stripping script tags, error handlers, and dangerous attributes.
+11. Second, reflected search terms are rendered strictly through React JSX text nodes, leveraging framework auto escaping.
+12. Third, the Express backend sends a strict Content Security Policy HTTP header restricting script execution to authorized origin scripts.
+13. Fourth, session cookies are configured with `HttpOnly: true`, preventing JavaScript from reading session identifiers even in the event of an injection.
+14. On Version 2, both stored XSS and phishing delivered reflected XSS vectors are completely neutralized, keeping the interface clean and secure.
 
 ## Act 5: Cross Site Request Forgery Exploitation and Defense by Mridankan Mandal (2.5 Minutes):
 

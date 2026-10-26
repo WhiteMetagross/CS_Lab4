@@ -90,10 +90,10 @@ scripts.forEach((oldScript) => {
 1. Variant 1 Stored XSS (Interactive DOM and Session Takeover):
    On `http://localhost:3000`, open pre-seeded Post 4: `Security Showcase: Interactive DOM Manipulation and Session Audit`, or click Start Discussion and submit an interactive DOM takeover payload.
    Result: The payload executes directly in the victim browser context. It extracts ambient session state and cookies into an injected control panel, manipulates the top navigation bar header by appending an animated `DOM HIJACKED BY XSS` badge, and provides interactive triggers to live-invert the page styling and spawn custom notification toasts.
-2. Variant 2 Reflected XSS:
-   On `http://localhost:3000`, enter `<img src="x" onerror="var t=document.createElement('div');t.style='margin:10px 0;padding:12px;background:#ef4444;color:#fff;border-radius:6px;font-weight:700;';t.innerText='Reflected XSS Execution: Search Parameter Executed Arbitrary JavaScript';this.parentNode.appendChild(t);" />` in the discussion search field.
-   Click Search.
-   Result: The unescaped search reflection injects the image element directly into the DOM, immediately spawning a visible attack confirmation banner below the search bar.
+2. Variant 2 Reflected XSS via Disguised Phishing Ad:
+   On `http://localhost:3000`, observe the dedicated career sponsor advertisement below the search bar: `Search 2026 Student Engineering Stipends`.
+   Click `Search Stipends (Phishing Ad) ->` or open the external simulated phishing portal at `http://localhost:3000/attackerPhishingAd.html`.
+   Result: The crafted link passes the XSS payload inside the `search` query parameter. Because Version 1 reflects the query unescaped into `innerHTML`, the image error handler executes and spawns the red `Reflected XSS Executed` alert box directly beneath the search input.
 
 ## 5. Category 4: Cross Site Request Forgery (CSRF) Vulnerabilities:
 

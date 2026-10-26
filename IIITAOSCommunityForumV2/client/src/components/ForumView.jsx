@@ -18,8 +18,16 @@ export default function ForumView({ user, onOpenAuth }) {
 
   const categories = ['All', 'Announcements', 'Guides', 'General Discussion', 'Bug Reports'];
 
+  const reflectedXssPayload = `<img src="x" onerror="(function(el){var b=document.createElement(\`div\`);b.id=\`reflectedXssAlertBox\`;b.style=\`margin:14px 0;padding:16px;background:linear-gradient(135deg,#7f1d1d,#991b1b);border:2px solid #ef4444;border-radius:10px;color:#fef2f2;box-shadow:0 8px 20px rgba(239,68,68,0.3);\`;b.innerHTML=\`<div style=&quot;display:flex;justify-content:space-between;align-items:center;margin-bottom:6px;&quot;><span style=&quot;background:#ef4444;color:#fff;font-size:10px;padding:3px 8px;border-radius:12px;font-weight:800;text-transform:uppercase;&quot;>Reflected XSS Executed</span><span style=&quot;font-size:11px;color:#fca5a5;&quot;>Delivered via Phishing Ad</span></div><h4 style=&quot;margin:0 0 4px 0;font-size:14px;color:#fff;&quot;>Search Parameter Code Execution Succeeded</h4><p style=&quot;margin:0;font-size:12px;color:#fee2e2;&quot;>The victim clicked a disguised search sponsorship ad. The unescaped search parameter was rendered directly into the DOM via innerHTML without sanitization.</p>\`;el.parentNode.appendChild(b);})(this)" />`;
+
   useEffect(() => {
     fetchPosts();
+    const params = new URLSearchParams(window.location.search);
+    const initialQuery = params.get('q') || params.get('search');
+    if (initialQuery) {
+      setSearchQuery(initialQuery);
+      executeSearch(initialQuery);
+    }
   }, []);
 
   const fetchPosts = async () => {
@@ -36,28 +44,38 @@ export default function ForumView({ user, onOpenAuth }) {
     }
   };
 
-  //Defense: Parameterized server search and framework auto escaped rendering of query reflections.
-  const handleSearch = async (e) => {
-    if (e) e.preventDefault();
-    if (!searchQuery.trim()) {
+  const executeSearch = async (queryText) => {
+    if (!queryText.trim()) {
       fetchPosts();
       return;
     }
 
+    setActiveSearch(queryText);
     try {
       setLoading(true);
-      const res = await fetch('/api/posts/search?q=' + encodeURIComponent(searchQuery));
+      const res = await fetch('/api/posts/search?q=' + encodeURIComponent(queryText));
       const data = await res.json();
       if (!res.ok) {
         throw new Error(data.error || 'Search failed');
       }
       setPosts(data.posts || []);
-      setActiveSearch(searchQuery);
     } catch (err) {
       setError('Search error: ' + err.message);
     } finally {
       setLoading(false);
     }
+  };
+
+  //Defense: Parameterized server search and framework auto escaped rendering of query reflections.
+  const handleSearch = async (e) => {
+    if (e) e.preventDefault();
+    executeSearch(searchQuery);
+  };
+
+  //Defense: Simulate clicking disguised search sponsorship phishing ad and demonstrate immunity.
+  const triggerPhishingSearch = () => {
+    setSearchQuery(reflectedXssPayload);
+    executeSearch(reflectedXssPayload);
   };
 
   const fetchPostDetails = async (id) => {
@@ -381,32 +399,32 @@ export default function ForumView({ user, onOpenAuth }) {
               )}
             </div>
 
-            {/* Defense: Display sponsored announcement banner safely. */}
+            {/* Defense: Display disguised search phishing ad and demonstrate complete immunity against reflected XSS. */}
             <div
-              className="sponsored-feed-banner"
-              onClick={() => window.open('/attackerCsrfExploit.html', '_blank')}
-              title="Campus Partner Promotion"
+              className="sponsored-search-ad"
+              onClick={triggerPhishingSearch}
+              title="Click to run sponsored stipend search"
             >
               <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', gap: '16px' }}>
                 <div>
                   <div style={{ display: 'flex', alignItems: 'center', gap: '8px', marginBottom: '4px' }}>
-                    <span className="sponsored-ad-badge">Promoted</span>
-                    <strong style={{ fontSize: '0.9rem', color: '#78350f' }}>IIIT Allahabad Student Cloud Program</strong>
+                    <span className="sponsored-search-badge">Career Sponsor</span>
+                    <strong style={{ fontSize: '0.9rem', color: '#1e3a8a' }}>Search 2026 Student Engineering Stipends</strong>
                   </div>
-                  <div style={{ fontSize: '0.8rem', color: '#92400e' }}>
-                    Free 500 Compute Credits for all registered students. One click instant grant activation.
+                  <div style={{ fontSize: '0.8rem', color: '#1e40af' }}>
+                    Apex Innovations campus fellowship grant query. One click search for IIIT-A eligible projects.
                   </div>
                 </div>
-                <a
-                  href="/attackerCsrfExploit.html"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="sponsored-ad-btn"
-                  style={{ whiteSpace: 'nowrap', marginLeft: '12px' }}
-                  onClick={(e) => e.stopPropagation()}
+                <button
+                  type="button"
+                  className="sponsored-search-btn"
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    triggerPhishingSearch();
+                  }}
                 >
-                  Claim Credits →
-                </a>
+                  Search Stipends (Phishing Ad) →
+                </button>
               </div>
             </div>
 
