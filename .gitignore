@@ -12,5 +12,7 @@ Thumbs.db
 forum.db
 */forum.db
 
-# Untracked examination resources
+# Untracked examination resources and courseware PDFs
 VivaQuestions.md
+Assignment_Web_Server_Security.pdf
+*.pdf
