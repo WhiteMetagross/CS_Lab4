@@ -71,7 +71,7 @@ containerRef.current.innerHTML = cleanHtml;
 
 ### 4.2 Attack Neutralization Evidence:
 1. Stored XSS Attempt: Opening Post 4 `Security Showcase: Interactive DOM Manipulation and Session Audit` proves complete defense. DOMPurify strips the script tags, image error handlers, and dangerous attributes. The navigation bar title remains untouched, no theme inversion or toasts can be triggered, and `HttpOnly` cookies cannot be accessed.
-2. Reflected XSS Attempt via Phishing Ad: Clicking the disguised career sponsor phishing ad or navigating via `attackerPhishingAd.html` fails to execute. The backend validates search characters and React JSX auto-escaping safely renders the payload as harmless text, preventing all client-side script execution.
+2. Reflected XSS Attempt via Free Swag Phishing Ad: Clicking the disguised free developer swag giveaway phishing ad or navigating via `attackerPhishingAd.html` fails to execute. The backend validates search characters and React JSX auto-escaping safely renders the payload as harmless text, preventing all client-side script execution.
 
 ## 5. Category 4: Cross Site Request Forgery (CSRF) Multi Layered Defenses:
 

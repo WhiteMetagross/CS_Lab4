@@ -91,9 +91,9 @@
 4. Point out the extracted ambient session tokens and cookies displayed within the injected control panel widget.
 5. Click the interactive button `Toggle Theme Inversion` to demonstrate live page color manipulation through injected JavaScript.
 6. Click `Spawn Injected Alert Toast` to demonstrate dynamic UI injection spawning a floating notification toast.
-7. Return to the main discussion feed and point out the dedicated disguised phishing ad placed directly beneath the search bar: `Career Sponsor: Search 2026 Student Engineering Stipends`.
-8. Explain that because reflected XSS attacks in the real world require phishing delivery, this ad disguises a malicious query link.
-9. Click the button `Search Stipends (Phishing Ad) ->` or navigate to `http://localhost:3000/attackerPhishingAd.html` to simulate an external phishing link.
+7. Return to the main discussion feed and point out the dedicated disguised phishing ad placed directly beneath the search bar: `Claim Free IIIT-A Student Developer Swag Kit & AI Credits!`.
+8. Explain that because reflected XSS attacks in the real world require phishing delivery, this ad disguises a malicious query link as a free student giveaway.
+9. Click the button `Claim Free Swag Kit Now ->` or navigate to `http://localhost:3000/attackerPhishingAd.html` to simulate an external phishing link.
 10. Demonstrate reflected XSS execution in Version 1, displaying the red glowing `Reflected XSS Executed` alert box below the search bar.
 11. Open `IIITAOSCommunityForumV1/client/src/components/ContentRenderer.jsx` and `ForumView.jsx` to highlight unescaped `innerHTML` rendering.
 12. Switch to Version 2 at `http://localhost:5000`.
@@ -106,7 +106,7 @@
 2. In Version 1, user submitted posts, comments, and search reflections are rendered directly into the DOM using `innerHTML` without sanitization.
 3. Rather than demonstrating trivial alert dialogs, our stored XSS payload establishes interactive DOM and session takeover.
 4. When a user opens the discussion, the injected payload extracts ambient session cookies, intercepts the navigation bar to append an animated takeover badge, and exposes interactive controls that invert site themes and spawn custom notification toasts.
-5. Furthermore, to demonstrate how reflected XSS occurs in realistic threat scenarios through phishing and social engineering, we created a dedicated disguised search sponsorship ad offering engineering stipends.
+5. Furthermore, to demonstrate how reflected XSS occurs in realistic threat scenarios through phishing and social engineering, we created a dedicated disguised search sponsorship ad offering a free student developer swag kit and AI credits.
 6. When the victim clicks this disguised ad on the forum, or clicks a crafted link in our simulated phishing portal `attackerPhishingAd.html`, the malicious script is transmitted in the URL query parameter.
 7. Because Version 1 reflects query parameters directly into `innerHTML`, the injected script executes immediately, creating a floating alert banner.
 8. The root cause is rendering untrusted user input directly into executable DOM sinks without contextual sanitization.

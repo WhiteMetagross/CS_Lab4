@@ -18,7 +18,7 @@ export default function ForumView({ user, onOpenAuth }) {
 
   const categories = ['All', 'Announcements', 'Guides', 'General Discussion', 'Bug Reports'];
 
-  const reflectedXssPayload = `<img src="x" onerror="(function(el){var b=document.createElement(\`div\`);b.id=\`reflectedXssAlertBox\`;b.style=\`margin:14px 0;padding:16px;background:linear-gradient(135deg,#7f1d1d,#991b1b);border:2px solid #ef4444;border-radius:10px;color:#fef2f2;box-shadow:0 8px 20px rgba(239,68,68,0.3);\`;b.innerHTML=\`<div style=&quot;display:flex;justify-content:space-between;align-items:center;margin-bottom:6px;&quot;><span style=&quot;background:#ef4444;color:#fff;font-size:10px;padding:3px 8px;border-radius:12px;font-weight:800;text-transform:uppercase;&quot;>Reflected XSS Executed</span><span style=&quot;font-size:11px;color:#fca5a5;&quot;>Delivered via Phishing Ad</span></div><h4 style=&quot;margin:0 0 4px 0;font-size:14px;color:#fff;&quot;>Search Parameter Code Execution Succeeded</h4><p style=&quot;margin:0;font-size:12px;color:#fee2e2;&quot;>The victim clicked a disguised search sponsorship ad. The unescaped search parameter was rendered directly into the DOM via innerHTML without sanitization.</p>\`;el.parentNode.appendChild(b);})(this)" />`;
+  const reflectedXssPayload = `<img src="x" onerror="(function(el){var b=document.createElement(\`div\`);b.id=\`reflectedXssAlertBox\`;b.style=\`margin:14px 0;padding:16px;background:linear-gradient(135deg,#7f1d1d,#991b1b);border:2px solid #ef4444;border-radius:10px;color:#fef2f2;box-shadow:0 8px 20px rgba(239,68,68,0.3);\`;b.innerHTML=\`<div style=&quot;display:flex;justify-content:space-between;align-items:center;margin-bottom:6px;&quot;><span style=&quot;background:#ef4444;color:#fff;font-size:10px;padding:3px 8px;border-radius:12px;font-weight:800;text-transform:uppercase;&quot;>Reflected XSS Executed</span><span style=&quot;font-size:11px;color:#fca5a5;&quot;>Delivered via Free Swag Phishing Ad</span></div><h4 style=&quot;margin:0 0 4px 0;font-size:14px;color:#fff;&quot;>Search Parameter Code Execution Succeeded</h4><p style=&quot;margin:0;font-size:12px;color:#fee2e2;&quot;>The victim clicked a disguised 'Claim Free Developer Swag' ad. The malicious search parameter was rendered directly into the DOM via innerHTML without sanitization.</p>\`;el.parentNode.appendChild(b);})(this)" />`;
 
   useEffect(() => {
     fetchPosts();
@@ -403,16 +403,16 @@ export default function ForumView({ user, onOpenAuth }) {
             <div
               className="sponsored-search-ad"
               onClick={triggerPhishingSearch}
-              title="Click to run sponsored stipend search"
+              title="Click to claim free developer swag bundle"
             >
               <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', gap: '16px' }}>
                 <div>
                   <div style={{ display: 'flex', alignItems: 'center', gap: '8px', marginBottom: '4px' }}>
-                    <span className="sponsored-search-badge">Career Sponsor</span>
-                    <strong style={{ fontSize: '0.9rem', color: '#1e3a8a' }}>Search 2026 Student Engineering Stipends</strong>
+                    <span className="sponsored-search-badge">Free Student Giveaway</span>
+                    <strong style={{ fontSize: '0.9rem', color: '#1e3a8a' }}>Claim Free IIIT-A Student Developer Swag Kit &amp; AI Credits!</strong>
                   </div>
                   <div style={{ fontSize: '0.8rem', color: '#1e40af' }}>
-                    Apex Innovations campus fellowship grant query. One click search for IIIT-A eligible projects.
+                    Campus Sponsor Giveaway: Free mechanical keyboards, hoodies, and 100 OpenAI compute tokens. Click to claim your free bundle.
                   </div>
                 </div>
                 <button
@@ -423,7 +423,7 @@ export default function ForumView({ user, onOpenAuth }) {
                     triggerPhishingSearch();
                   }}
                 >
-                  Search Stipends (Phishing Ad) →
+                  Claim Free Swag Kit Now →
                 </button>
               </div>
             </div>
