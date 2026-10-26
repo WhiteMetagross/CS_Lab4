@@ -1,5 +1,11 @@
 # IIIT Allahabad Open Source Community Forum Web Server Security Repository:
 
+## Group 1 Members:
+1. Mridankan Mandal: IIB2024017.
+2. Aditya Pachauri: IIB2024001.
+3. Ankit Ekka: IIB2024012.
+4. Dhannu Ram Meena: IIB2024033.
+
 ## 1. Table 3: Individual Member Ownership Declaration:
 1. Member Name: Mridankan Mandal. Roll Number: IIB2024017. Category: Cross Site Request Forgery (CSRF). Variant Implemented: Variant 2 POST based forged action with auto submitting form and Variant 1 GET based forged action.
 2. Member Name: Aditya Pachauri. Roll Number: IIB2024001. Category: SQL Injection. Variant Implemented: Variant 1 Authentication bypass and Variant 2 UNION based data extraction.
