@@ -59,14 +59,14 @@
 
 ### 5.3 Category 3: Cross Site Scripting (XSS):
 1. Vulnerability Flaws in Version 1: Rendering untrusted user content directly via unescaped `innerHTML` and dynamically executing embedded script tags.
-2. Exploit Variant 1 Stored XSS: Storing `<img src="x" onerror="alert('Stored XSS: ' + document.cookie)" />` inside discussion posts triggers script execution for all visiting users.
-3. Exploit Variant 2 Reflected XSS: Submitting `<img src=x onerror=alert('Reflected XSS')>` reflects unescaped into search results and triggers immediate execution.
+2. Exploit Variant 1 Stored XSS: Storing interactive DOM takeover payload inside discussion posts triggers real time navbar brand modification, ambient cookie dumping, dynamic theme inversion, and live notification toasts for all visiting users.
+3. Exploit Variant 2 Reflected XSS: Submitting unencoded search queries injects attack confirmation error banners directly into the DOM interface.
 4. Multi Layered Defenses in Version 2: DOMPurify sanitization with strict element and attribute allow lists, React framework auto escaping, HTTP Content Security Policy response headers, and HttpOnly session cookies.
 
 ### 5.4 Category 4: Cross Site Request Forgery (CSRF):
 1. Vulnerability Flaws in Version 1: Ambient cookie transmission on cross origin requests, absence of anti CSRF synchronizer tokens, and lack of origin verification.
-2. Exploit Variant 1 GET Based Forged Action: Hidden image tag requesting `http://localhost:3000/api/posts/delete-by-get?id=3` deletes discussions silently.
-3. Exploit Variant 2 POST Based Forged Action: External page with auto submitting hidden HTML form modifies administrator biography without consent.
+2. Exploit Variant 1 GET Based Forged Action: Embedded image or link requesting `http://localhost:3000/api/posts/delete-by-get?id=3` deletes discussions silently via ambient cookie.
+3. Exploit Variant 2 POST Based Forged Action via Disguised Campus Ad: Disguised campus partner ad cards embedded in the forum sidebar and feed lure victims to an external student credit portal that auto submits forged profile data without consent.
 4. Multi Layered Defenses in Version 2: Cryptographic 256 bit anti CSRF synchronizer tokens, `SameSite: strict` and `HttpOnly: true` cookie directives, server side Origin and Referer header verification, and strict rejection of state changing GET requests with HTTP 405.
 
 ## 6. Preconfigured Community Accounts:

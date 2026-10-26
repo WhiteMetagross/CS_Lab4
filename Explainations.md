@@ -134,10 +134,10 @@ scripts.forEach((oldScript) => {
 2. Flaw in Search Query Reflection: In file `IIITAOSCommunityForumV1/client/src/components/ForumView.jsx`, search queries are reflected directly into unescaped DOM elements using `ContentRenderer`.
 
 ### 5.3 Working Exploitation Walkthrough:
-1. Variant 1 Stored XSS: In Version 1 on port 3000, create a new discussion topic or comment containing the payload `<img src="invalid" onerror="alert('Stored XSS Executed on Session: ' + document.cookie)" />`.
-2. Execution Result: The payload is stored in the SQLite database. When any user or administrator opens the discussion detail view, the browser executes the image error handler, displaying an alert dialog containing the user session token.
-3. Variant 2 Reflected XSS: In Version 1, enter `<img src="x" onerror="alert('Reflected XSS Execution')">` in the discussion search field.
-4. Execution Result: The unescaped search string is reflected immediately into the DOM, executing the script in the user browser context.
+1. Variant 1 Stored XSS (Interactive DOM and Session Takeover): In Version 1 on port 3000, navigate to Discussions and open Post 4 `Security Showcase: Interactive DOM Manipulation and Session Audit`, or submit an interactive DOM takeover payload via Start Discussion.
+2. Execution Result: The payload establishes unhindered script execution in the victim browser context. It extracts ambient session state and cookies into an injected control panel, manipulates the top navigation bar header by appending an animated `DOM HIJACKED BY XSS` badge, and exposes interactive controls that invert site themes and spawn custom notification toasts.
+3. Variant 2 Reflected XSS: In Version 1, enter `<img src="x" onerror="var t=document.createElement('div');t.style='margin:10px 0;padding:12px;background:#ef4444;color:#fff;border-radius:6px;font-weight:700;';t.innerText='Reflected XSS Execution: Search Parameter Executed Arbitrary JavaScript';this.parentNode.appendChild(t);" />` in the discussion search field.
+4. Execution Result: The unescaped search string is reflected immediately into the DOM, executing the script and dynamically inserting an attack confirmation banner into the search interface.
 
 ### 5.4 Multi Layered Defenses Implemented in Version 2:
 1. Defense 1 Rich HTML Sanitization via DOMPurify: In file `IIITAOSCommunityForumV2/client/src/components/ContentRenderer.jsx`, all content is sanitized with DOMPurify using strict allowed tag and attribute policies.
@@ -178,8 +178,9 @@ res.cookie('session_token', token, { path: '/' });
 3. Flaw in Discussion Deletion via GET: In `IIITAOSCommunityForumV1/server/routes/posts.js`, the endpoint `GET /api/posts/delete-by-get` performs state modifications on HTTP GET requests.
 
 ### 6.3 Working Exploitation Walkthrough:
-1. Variant 1 GET Based Forged Action: An attacker embeds `<img src="http://localhost:3000/api/posts/delete-by-get?id=3" width="0" height="0" />` on an external page `attackerCsrfGetExploit.html`. When an authenticated administrator visits the page, the browser issues a GET request with cookies, silently deleting the post.
-2. Variant 2 POST Based Forged Action: The attacker hosts `attackerCsrfExploit.html` containing an invisible HTML form targeting `/api/auth/profile`. Upon page load, JavaScript auto submits the form, carrying the administrator cookie and altering the profile biography without consent.
+1. Delivery Vector via In-App Disguised Ads: To simulate realistic exploitation, sponsored campus partner advertisements for `CloudSphere Student Partner Credits` are embedded in the forum sidebar and discussion feed. Logged-in users navigating discussions can accidentally click on the promotional ad card or call-to-action button.
+2. Variant 1 POST Based Forged Action via Disguised Ad: Clicking the ad opens `attackerCsrfExploit.html` styled as a legitimate student credit activation portal. In the background, the page automatically submits an unauthorized POST request to `/api/auth/profile` using ambient session cookies, instantly modifying the administrator profile biography.
+3. Variant 2 GET Based Forged Action via Voucher Link: The attacker provides a secondary promotional link to `attackerCsrfGetExploit.html`. When clicked, an embedded request issues a GET query to `/api/posts/delete-by-get?id=3` with ambient cookies, deleting the discussion without victim consent.
 
 ### 6.4 Multi Layered Defenses Implemented in Version 2:
 1. Defense 1 Cryptographic Anti CSRF Synchronizer Tokens: Upon login, a 256 bit random token is generated using `crypto.randomBytes(32)` and stored in the session.

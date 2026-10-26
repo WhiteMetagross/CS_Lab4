@@ -653,3 +653,90 @@ h1, h2, h3, h4 {
   border-color: #4ade80;
   color: #166534;
 }
+
+/* This does style the disguised campus partner ad card and animated elements. */
+.sponsored-ad-card {
+  margin-top: 18px;
+  background: linear-gradient(135deg, #fffbeb 0%, #fef3c7 100%);
+  border: 2px dashed #f59e0b;
+  border-radius: 10px;
+  padding: 16px;
+  position: relative;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+  user-select: none;
+  cursor: pointer;
+}
+
+.sponsored-ad-card:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 16px rgba(245, 158, 11, 0.25);
+  border-color: #d97706;
+}
+
+.sponsored-ad-badge {
+  display: inline-block;
+  font-size: 0.65rem;
+  font-weight: 800;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  color: #92400e;
+  background: #fde68a;
+  border: 1px solid #f59e0b;
+  padding: 2px 6px;
+  border-radius: 4px;
+}
+
+.sponsored-ad-title {
+  font-size: 0.94rem;
+  font-weight: 700;
+  color: #78350f;
+  margin: 8px 0 6px 0;
+  line-height: 1.3;
+}
+
+.sponsored-ad-desc {
+  font-size: 0.78rem;
+  color: #92400e;
+  margin-bottom: 12px;
+  line-height: 1.45;
+}
+
+.sponsored-ad-btn {
+  display: block;
+  text-align: center;
+  background: #d97706;
+  color: #ffffff !important;
+  font-weight: 600;
+  font-size: 0.82rem;
+  padding: 8px 12px;
+  border-radius: 6px;
+  text-decoration: none;
+  transition: background-color 0.2s;
+  cursor: pointer;
+}
+
+.sponsored-ad-btn:hover {
+  background: #b45309;
+}
+
+.sponsored-feed-banner {
+  background: linear-gradient(135deg, #fffbeb 0%, #fef3c7 100%);
+  border: 1px solid #fcd34d;
+  border-left: 4px solid #f59e0b;
+  border-radius: 8px;
+  padding: 14px 18px;
+  margin-bottom: 18px;
+  transition: transform 0.15s ease, box-shadow 0.15s ease;
+  cursor: pointer;
+}
+
+.sponsored-feed-banner:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px rgba(245, 158, 11, 0.2);
+}
+
+@keyframes pulse {
+  0% { transform: scale(1); opacity: 1; }
+  50% { transform: scale(1.05); opacity: 0.85; }
+  100% { transform: scale(1); opacity: 1; }
+}

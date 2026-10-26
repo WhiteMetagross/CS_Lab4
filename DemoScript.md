@@ -85,60 +85,67 @@
 ## Act 4: Cross Site Scripting Exploitation and Defense by Dhannu Ram Meena (2.5 Minutes):
 
 ### Screen Action:
-1. On Version 1 at `http://localhost:3000`, navigate to Discussions and click Start Discussion.
-2. Enter the title `Community Web Tools Update`.
-3. In the content body, input `<img src="invalid" onerror="alert('Stored XSS Executed on Session: ' + document.cookie)" />`.
-4. Publish the discussion, navigate into the post detail, and demonstrate the alert dialog executing and displaying session data.
-5. Go to the search input, enter `<img src="x" onerror="alert('Reflected XSS Execution')">`, click Search, and show the alert dialog firing from reflected query context.
-6. Open `IIITAOSCommunityForumV1/client/src/components/ContentRenderer.jsx` and `ForumView.jsx` to highlight unescaped `innerHTML` rendering.
-7. Switch to Version 2 at `http://localhost:5000`.
-8. Create a discussion with the identical stored XSS payload.
-9. Open the discussion and demonstrate that DOMPurify sanitized the content, neutralizing the script and event handler completely.
-10. Search for the reflected XSS payload on Version 2 and show that React framework auto escaping safely rendered the query as pure text.
-11. Inspect the network response headers in developer tools to highlight the Content Security Policy header.
+1. On Version 1 at `http://localhost:3000`, navigate to Discussions and click on Post 4: `Security Showcase: Interactive DOM Manipulation and Session Audit`.
+2. Demonstrate rich stored XSS execution in the browser context without simple alerts.
+3. Observe that the top navbar brand title immediately receives the animated red badge: `DOM HIJACKED BY XSS`.
+4. Point out the extracted ambient session tokens and cookies displayed within the injected control panel widget.
+5. Click the interactive button `Toggle Theme Inversion` to demonstrate live page color manipulation through injected JavaScript.
+6. Click `Spawn Injected Alert Toast` to demonstrate dynamic UI injection spawning a floating notification toast.
+7. Return to the main discussion feed, go to the search bar, and input `<img src="x" onerror="var t=document.createElement('div');t.style='margin:10px 0;padding:12px;background:#ef4444;color:#fff;border-radius:6px;font-weight:700;';t.innerText='Reflected XSS Execution: Search Parameter Executed Arbitrary JavaScript';this.parentNode.appendChild(t);" />`.
+8. Click Search and demonstrate reflected XSS dynamically injecting an error banner directly below the search form.
+9. Open `IIITAOSCommunityForumV1/client/src/components/ContentRenderer.jsx` and `ForumView.jsx` to highlight unescaped `innerHTML` rendering.
+10. Switch to Version 2 at `http://localhost:5000`.
+11. Open Post 4 and demonstrate that DOMPurify sanitized the content completely: the navbar brand title remains pristine and un-tampered, no scripts execute, and no toasts appear.
+12. Search for the reflected XSS payload on Version 2 and show that React framework auto escaping safely rendered the query as pure text.
+13. Inspect the network response headers in developer tools to highlight the Content Security Policy header.
 
 ### Narration:
 1. I am Dhannu Ram Meena, roll number IIB2024033, and I am demonstrating the Cross Site Scripting category.
 2. In Version 1, user submitted posts, comments, and search reflections are rendered directly into the DOM using `innerHTML` without sanitization.
-3. When an attacker creates a discussion containing an image tag with an `onerror` handler or a script tag, that script is stored permanently in the database.
-4. Whenever any community member or administrator visits the discussion, the script executes automatically within their browser session.
-5. Furthermore, search keywords are reflected unencoded into the DOM, allowing reflected XSS attacks.
-6. The root cause is untrusted user input being rendered into execution contexts without contextual encoding or sanitization.
+3. Rather than demonstrating trivial alert dialogs, our stored XSS payload establishes interactive DOM and session takeover.
+4. When a user opens the discussion, the injected payload extracts ambient session cookies, intercepts the navigation bar to append an animated takeover badge, and exposes interactive controls that invert site themes and spawn custom notification toasts.
+5. In addition, search inputs reflected into `innerHTML` allow an attacker to inject custom UI banners into the page via reflected XSS.
+6. The root cause is rendering untrusted user input directly into executable DOM sinks without contextual sanitization.
 7. In Version 2, we implemented multiple layers of defense.
-8. First, we integrate DOMPurify sanitization in `ContentRenderer.jsx`, which strips dangerous tags like `script` and `iframe` and strips all inline event handlers.
+8. First, `ContentRenderer.jsx` sanitizes all markup using DOMPurify, stripping script tags, error handlers, and dangerous attributes.
 9. Second, reflected search terms are rendered strictly through React JSX text nodes, leveraging framework auto escaping.
 10. Third, the Express backend sends a strict Content Security Policy HTTP header restricting script execution to authorized origin scripts.
 11. Fourth, session cookies are configured with `HttpOnly: true`, preventing JavaScript from reading session identifiers even in the event of an injection.
-12. On Version 2, both stored and reflected XSS vectors are completely neutralized.
+12. On Version 2, both stored and reflected XSS vectors are completely neutralized, keeping the interface clean and secure.
 
 ## Act 5: Cross Site Request Forgery Exploitation and Defense by Mridankan Mandal (2.5 Minutes):
 
 ### Screen Action:
-1. On Version 1 at `http://localhost:3000`, log in as Dr. Mridankan Mandal.
-2. Navigate to Member Profiles and show the legitimate profile biography.
-3. In a second browser tab, open the external attacker page `http://localhost:3000/attackerCsrfExploit.html`.
-4. Show the hidden auto submitting HTML form and trigger the forged POST request to `/api/auth/profile`.
-5. Return to the forum tab at `http://localhost:3000`, refresh Member Profiles, and show the hijacked administrator biography.
-6. In a third browser tab, open `http://localhost:3000/attackerCsrfGetExploit.html` to demonstrate the GET based forged action deleting a discussion.
-7. Open `IIITAOSCommunityForumV1/server/routes/auth.js` to highlight missing anti CSRF tokens, absence of SameSite cookie directives, and absent origin checks.
-8. Switch to Version 2 at `http://localhost:5000` and log in as Dr. Mridankan Mandal.
-9. Open `http://localhost:5000/attackerCsrfExploit.html` and attempt the POST exploit, displaying the HTTP 403 Forbidden rejection.
-10. Open `http://localhost:5000/attackerCsrfGetExploit.html` and show the HTTP 405 Method Not Allowed rejection for GET state changes.
-11. Return to Version 2 Member Profiles and confirm the biography remains unchanged.
+1. On Version 1 at `http://localhost:3000`, log in as Dr. Mridankan Mandal (username `mridankan`, password `mridankan123`).
+2. Navigate to Member Profiles and show the legitimate administrator profile biography.
+3. Return to the Discussions tab and draw attention to the disguised campus partner ad cards embedded in the sidebar and main feed: `Claim 500 Free Cloud Compute Credits!`.
+4. Demonstrate how an active forum member navigating the sidebar can accidentally click on the promotional ad card.
+5. Show that clicking opens the CloudSphere student grant activation portal at `http://localhost:3000/attackerCsrfExploit.html`.
+6. Explain how this disguised portal automatically dispatches an unauthorized POST request to `/api/auth/profile` using ambient cookies.
+7. Return to the forum tab at `http://localhost:3000`, refresh Member Profiles, and show the hijacked administrator biography.
+8. Show the secondary disguised ad link for campus domain vouchers at `http://localhost:3000/attackerCsrfGetExploit.html` to demonstrate the GET based forged action deleting a discussion.
+9. Open `IIITAOSCommunityForumV1/server/routes/auth.js` to highlight missing anti CSRF tokens, absence of SameSite cookie directives, and absent origin checks.
+10. Switch to Version 2 at `http://localhost:5000` and log in as Dr. Mridankan Mandal.
+11. Click on the disguised campus partner ad on Version 2, loading `http://localhost:5000/attackerCsrfExploit.html`.
+12. Observe the HTTP 403 Forbidden rejection when the forged request is submitted.
+13. Open `http://localhost:5000/attackerCsrfGetExploit.html` and show the HTTP 405 Method Not Allowed rejection for GET state changes.
+14. Return to Version 2 Member Profiles and confirm the biography remains unchanged.
 
 ### Narration:
 1. I am Mridankan Mandal, roll number IIB2024017, and I am demonstrating the Cross Site Request Forgery category.
 2. In Version 1, the backend processes state changing profile updates and post deletions relying purely on ambient browser session cookies.
-3. When the authenticated administrator is lured into visiting an external attacker page, a hidden HTML form automatically submits forged profile data.
-4. Because the browser automatically attaches stored cookies to outgoing cross site requests, the server updates the administrator profile without knowledge or consent.
-5. In addition, state changing operations supported on GET requests can be triggered silently through embedded image tags.
-6. The root cause is processing state changing requests without verifying user intent or requiring unpredictable proof of origin.
-7. In Version 2, we deployed an industry standard multi layered defense.
-8. First, we generate a cryptographically random 256 bit Anti CSRF synchronizer token on login and verify it via middleware on all state changing requests.
-9. Second, session cookies are issued with `SameSite: strict` and `HttpOnly: true`, instructing the browser never to attach cookies on cross site submissions.
-10. Third, our server middleware validates `Origin` and `Referer` headers against our trusted application domain.
-11. Fourth, all state changing operations are strictly barred on HTTP GET requests.
-12. When the attacker portals attempt to forge requests against Version 2, the server immediately rejects them with HTTP 403 Forbidden and HTTP 405 Method Not Allowed.
+3. To demonstrate real world attack delivery, we embedded a disguised campus partner advertisement directly on the forum website offering free cloud compute credits.
+4. When a logged-in user accidentally clicks the ad while navigating discussions, the browser opens the promotional portal.
+5. In the background, a hidden HTML form automatically submits forged profile data to our profile endpoint.
+6. Because the browser automatically attaches stored cookies to outgoing cross site requests, the server updates the administrator profile without knowledge or consent.
+7. Furthermore, state changing operations supported on GET requests can be triggered through image tags disguised as voucher vouchers.
+8. The root cause is processing state changing requests without verifying user intent or requiring unpredictable proof of origin.
+9. In Version 2, we deployed an industry standard multi layered defense.
+10. First, we generate a cryptographically random 256 bit Anti CSRF synchronizer token on login and verify it via middleware on all state changing requests.
+11. Second, session cookies are issued with `SameSite: strict` and `HttpOnly: true`, instructing the browser never to attach cookies on cross site submissions.
+12. Third, our server middleware validates `Origin` and `Referer` headers against our trusted application domain.
+13. Fourth, all state changing operations are strictly barred on HTTP GET requests.
+14. When the disguised partner portal attempts to forge requests against Version 2, the server immediately rejects them with HTTP 403 Forbidden and HTTP 405 Method Not Allowed.
 
 ## Act 6: Conclusion and Summary (1 Minute):
 
