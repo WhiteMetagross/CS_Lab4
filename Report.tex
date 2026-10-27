@@ -1,0 +1,261 @@
+\documentclass[11pt,a4paper]{article}
+\usepackage[top=1.8cm,bottom=2cm,left=2cm,right=2cm]{geometry}
+\usepackage{mathptmx}
+\usepackage{listings}
+\usepackage{xcolor}
+\usepackage{array}
+\usepackage{fancyhdr}
+\usepackage[colorlinks=true,linkcolor=black,urlcolor=black]{hyperref}
+
+\pagestyle{fancy}
+\fancyhf{}
+\lfoot{\footnotesize Group Assignment: Web Server Security}
+\rfoot{\footnotesize Page \thepage\ of 5}
+\renewcommand{\headrulewidth}{0pt}
+\renewcommand{\footrulewidth}{0.4pt}
+
+\lstset{
+  basicstyle=\small\ttfamily,
+  backgroundcolor=\color{gray!10},
+  frame=single,
+  framerule=0.5pt,
+  rulecolor=\color{gray!40},
+  breaklines=true,
+  showstringspaces=false,
+  xleftmargin=8pt,
+  xrightmargin=8pt
+}
+
+\sloppy
+
+\begin{document}
+
+% PAGE 1
+\begin{center}
+  {\Large\bfseries Lab Assignment: Web Server Security:}\\[4pt]
+  {\normalsize Cyber Security (IT 30001), Autumn Semester 2026:}\\[2pt]
+  {\normalsize Indian Institute of Information Technology Allahabad (IIIT A):}\\[2pt]
+  {\normalsize Instructor: Dr. Soumyadev Maity:}\\[8pt]
+\end{center}
+
+\subsection*{Group Ownership Declaration:}
+This report compiles our group implementations, vulnerability analyses, and defense mitigations across the four required vulnerability categories. Each member assumed primary ownership of one specific category and variant to demonstrate full coverage.
+
+\vspace{4pt}
+\noindent
+\begin{tabular}{|p{3.4cm}|p{2.5cm}|p{4.4cm}|p{5.1cm}|}
+\hline
+\textbf{Member Name:} & \textbf{Roll Number:} & \textbf{Category:} & \textbf{Variant Implemented:} \\
+\hline
+Dhannu Ram Meena & IIB2024033 & SQL Injection & Authentication Bypass \\
+\hline
+Ankit Ekka & IIB2024012 & OS Command Injection & In Band Diagnostic Ping Output \\
+\hline
+Mridankan Mandal & IIB2024017 & Cross Site Scripting (XSS) & Stored Interactive DOM Injection \\
+\hline
+Aditya Pachauri & IIB2024001 & Cross Site Request Forgery & POST Based Forged Profile Action \\
+\hline
+\end{tabular}
+
+\vspace{10pt}
+\subsection*{Web Application Overview:}
+1. The target web platform is the IIIT Allahabad Open Source Community Forum. It is built using Node.js, Express, SQLite, and a React user interface.
+2. The project contains two parallel versions. Version 1 runs on port 3000 and contains deliberate architectural vulnerabilities across all four categories. Version 2 runs on port 5000 and implements defense in depth mitigations.
+3. The platform provides user authentication, community discussion threads, real time developer chat, profile management, and campus server network diagnostics.
+
+\vspace{8pt}
+\subsection*{1. SQL Injection (SQLi):}
+SQL injection occurs when untrusted user input is directly concatenated into a dynamic database query string without token parameterization or sanitization.
+
+\subsubsection*{Variant Implemented: Authentication Login Bypass:}
+
+\paragraph*{(a) Vulnerable Implementation:}
+The user authentication handler is located in file \texttt{server/routes/auth.js} within the \texttt{POST /api/auth/login} route. The application dynamically concatenates raw user strings into the SQL query:
+\begin{lstlisting}
+SELECT id, username, password, role FROM users 
+WHERE username = 'USER_INPUT' AND password = 'PASSWORD_INPUT'
+\end{lstlisting}
+
+\paragraph*{(b) Working Exploit:}
+The attacker submits the following input into the login form:
+\begin{enumerate}
+  \item Username input: \texttt{mridankan' --}
+  \item Password input: \texttt{arbitraryPassword}
+\end{enumerate}
+
+\paragraph*{(c) Root Cause:}
+Untrusted string input is merged directly into the SQL query text. The single quote character closes the string literal early, and the double dash sequence marks the remainder of the query as a database comment. This causes SQLite to discard the password check entirely, returning the administrator record and issuing a valid session token.
+
+\clearpage
+
+% PAGE 2
+\subsection*{1. SQL Injection (Mitigation and Theory):}
+
+\paragraph*{(d) Mitigation Implemented: Parameterized Prepared Statements:}
+In Version 2 on port 5000, the authentication handler in \texttt{server/routes/auth.js} uses precompiled prepared statements with parameter placeholders:
+\begin{lstlisting}
+SELECT id, username, password, role FROM users 
+WHERE username = ? AND password = ?
+\end{lstlisting}
+The database engine compiles and plans the query structure prior to binding user values. When the payload \texttt{mridankan' --} is evaluated, the database driver treats the quotation mark and double dash strictly as literal characters belonging to the username. Because no account has that literal username, the query cleanly fails and the server responds with HTTP 401 Unauthorized.
+
+\paragraph*{(e) Other Mitigations (Theory):}
+1. Input validation with allow lists: Incoming usernames must be checked against strict regular expressions such as alphanumeric strings between 3 and 30 characters. Any input containing quotation marks, spaces, or comment characters is rejected at the network boundary before database execution.
+2. Least privilege database accounts: The web application should connect using database credentials that possess only minimal read and write permissions on necessary tables, restricting table drops and administrative commands.
+3. Safe generic errors: The application must return generic failure notices like invalid username or password without exposing database syntax errors, preventing attackers from mapping the internal database schema.
+
+\vspace{12pt}
+\subsection*{2. OS Command Injection:}
+Operating System Command Injection occurs when an application executes host operating system binaries and includes untrusted user input directly in the command string without validation or shell isolation.
+
+\subsubsection*{Variant Implemented: In Band Diagnostic Ping Output:}
+
+\paragraph*{(a) Vulnerable Implementation:}
+The network diagnostics route is located in file \texttt{server/routes/diagnostics.js} within the \texttt{POST /api/diagnostics/ping} route. The application concatenates the user supplied host value directly into a shell execution string:
+\begin{lstlisting}
+const command = 'ping -n 2 ' + host
+exec(command, (error, stdout, stderr) => { ... })
+\end{lstlisting}
+
+\paragraph*{(b) Working Exploit:}
+In the Diagnostics tab, the user enters the following destination node string:
+\begin{enumerate}
+  \item Injected input: \texttt{127.0.0.1 \& whoami}
+\end{enumerate}
+
+\paragraph*{(c) Root Cause:}
+Direct string concatenation into a command string passed to \texttt{child\_process.exec} causes the system command interpreter to evaluate metacharacters. The shell evaluates the ampersand character as a command delimiter, executes the ping utility, and immediately executes the secondary command \texttt{whoami}, returning the server username in the response.
+
+\clearpage
+
+% PAGE 3
+\subsection*{2. OS Command Injection (Mitigation and Theory):}
+
+\paragraph*{(d) Mitigation Implemented: Parameterized Execution via Argument Vectors:}
+In Version 2 on port 5000, the diagnostics handler in \texttt{server/routes/diagnostics.js} replaces shell execution with direct binary invocation using \texttt{child\_process.execFile}:
+\begin{lstlisting}
+const pingArguments = ['-n', '2', host]
+execFile('ping', pingArguments, { shell: false, timeout: 5000 }, callback)
+\end{lstlisting}
+Because \texttt{shell: false} is enforced, the operating system kernel invokes the ping executable directly without spawning a command interpreter. The entire input \texttt{127.0.0.1 \& whoami} is passed as a single literal argument. The ping binary attempts to resolve the string as an invalid destination address, completely eliminating secondary command execution.
+
+\paragraph*{(e) Other Mitigations (Theory):}
+1. Avoiding the shell: Applications should avoid shell execution entirely by utilizing native programming language runtime libraries such as \texttt{dns.lookup} or native TCP socket connections for connectivity checks.
+2. Input validation allow lists: All incoming targets must be strictly validated against regular expressions for valid IPv4 addresses or qualified hostnames. Any request containing command separators or whitespace is rejected with HTTP 400.
+3. Least privilege: Application worker processes must run under dedicated low privilege service accounts rather than administrator or root accounts, restricting file modification even if process creation occurs.
+
+\vspace{12pt}
+\subsection*{3. Cross Site Scripting (XSS):}
+Cross Site Scripting occurs when an application injects untrusted user data into the client document object model without context aware encoding or sanitization, causing the browser to execute it as native JavaScript.
+
+\subsubsection*{Variant Implemented: Stored Interactive DOM and Session Injection:}
+
+\paragraph*{(a) Vulnerable Implementation:}
+The flaw is located in the client post rendering component in \texttt{client/src/components/ContentRenderer.jsx} and the post storage endpoint in \texttt{server/routes/posts.js}. The component directly injects raw unescaped HTML into the page using the unsafe DOM sink \texttt{innerHTML} and re-executes embedded scripts:
+\begin{lstlisting}
+containerRef.current.innerHTML = content
+const scripts = containerRef.current.querySelectorAll('script')
+\end{lstlisting}
+
+\paragraph*{(b) Working Exploit:}
+The attacker stores the following payload within a discussion topic:
+\begin{lstlisting}
+<img src="x" onerror="document.title='DOM HIJACKED BY XSS'
+alert('Session Token: ' + document.cookie)" />
+\end{lstlisting}
+
+\paragraph*{(c) Root Cause:}
+Untrusted user data stored in the database is rendered into the client browser without HTML entity escaping or sanitization. The browser HTML parser encounters the inline event handler and executes the JavaScript code within the security context of the victim session.
+
+\clearpage
+
+% PAGE 4
+\subsection*{3. Cross Site Scripting (Mitigation and Theory):}
+
+\paragraph*{(d) Mitigation Implemented: HTML Sanitization and Framework Auto-Escaping:}
+In Version 2 on port 5000, the application implements strict defense in depth inside \texttt{client/src/components/ContentRenderer.jsx}:
+\begin{lstlisting}
+const cleanHtml = DOMPurify.sanitize(content, {
+  ALLOWED_TAGS: ['b', 'i', 'em', 'strong', 'p', 'code', 'pre', 'ul', 'li'],
+  FORBID_TAGS: ['script', 'iframe', 'object', 'embed'],
+  FORBID_ATTR: ['onerror', 'onload', 'onclick', 'src']
+})
+\end{lstlisting}
+The sanitization library removes dangerous elements and execution attributes before DOM insertion. In addition, standard text fields use React JSX auto-escaping, treating markup purely as text strings.
+
+\paragraph*{(e) Other Mitigations (Theory):}
+1. Context aware output encoding: Untrusted data must be encoded according to its rendering context, converting characters like angle brackets and quotes into safe HTML entities.
+2. Content Security Policy (CSP): Delivered via HTTP response headers, CSP restricts script execution exclusively to authorized script sources and blocks inline script execution.
+3. HttpOnly cookies: Setting the \texttt{HttpOnly} flag on authentication cookies prevents client side JavaScript from accessing session tokens through \texttt{document.cookie}.
+4. Safe DOM sinks: Developers must assign dynamic content using safe properties such as \texttt{textContent} rather than unsafe sinks like \texttt{innerHTML} or \texttt{eval}.
+
+\vspace{12pt}
+\subsection*{4. Cross Site Request Forgery (CSRF):}
+Cross Site Request Forgery tricks a victim authenticated browser into sending unauthorized state changing requests to a trusted application, taking advantage of automatic ambient cookie transmission.
+
+\subsubsection*{Variant Implemented: POST Based Forged Profile Modification:}
+
+\paragraph*{(a) Vulnerable Implementation:}
+The flaw is located in file \texttt{server/routes/auth.js} within the \texttt{POST /api/auth/profile} route. The endpoint processes profile updates relying solely on the ambient session cookie:
+\begin{lstlisting}
+router.post('/profile', (req, res) => {
+  const { bio, full_name } = req.body
+  db.prepare("UPDATE users SET bio = ? WHERE id = ?").run(bio, req.user.id)
+})
+\end{lstlisting}
+
+\paragraph*{(b) Working Exploit:}
+The attacker hosts an external page \texttt{attackerCsrfExploit.html} containing an auto-submitting form:
+\begin{lstlisting}
+<form action="http://localhost:3000/api/auth/profile" method="POST">
+  <input type="hidden" name="bio" value="Compromised via CSRF exploit." />
+</form>
+<script>document.forms[0].submit()</script>
+\end{lstlisting}
+
+\paragraph*{(c) Root Cause:}
+The server performs sensitive state changing operations based solely on credentials automatically attached by the browser, without verifying deliberate user intent or checking request origins.
+
+\clearpage
+
+% PAGE 5
+\subsection*{4. Cross Site Request Forgery (Mitigation and Theory):}
+
+\paragraph*{(d) Mitigation Implemented: Anti-CSRF Synchronizer Tokens and Strict Cookies:}
+In Version 2 on port 5000, the server enforces cryptographic synchronizer tokens in \texttt{server/routes/auth.js}:
+\begin{lstlisting}
+const clientToken = req.headers['x-csrf-token'] || req.body._csrf
+if (!clientToken || clientToken !== req.session.csrfToken) {
+  return res.status(403).json({ error: 'CSRF token validation failed.' })
+}
+\end{lstlisting}
+The application generates an unpredictable cryptographically secure token tied to the user session. Legitimate requests include this token in an HTTP header. Forged requests from external origins cannot read or supply this token due to the Same Origin Policy. Furthermore, session cookies are configured with \texttt{SameSite=Strict}, preventing the browser from attaching cookies on cross site requests.
+
+\paragraph*{(e) Other Mitigations (Theory):}
+1. SameSite cookie configuration: Setting \texttt{SameSite=Strict} or \texttt{SameSite=Lax} on session cookies instructs the browser to omit cookies during cross site navigations and form posts.
+2. Re-authentication for sensitive actions: For critical transactions like password changes or email updates, requiring the user to re-enter their current password defeats automated CSRF attacks.
+3. Avoiding state changing GET requests: All state changing actions must strictly require HTTP POST, PUT, or DELETE methods, rejecting GET attempts with HTTP 405 Method Not Allowed.
+
+\vspace{12pt}
+\subsection*{5. Comparative Architectural Defense Summary:}
+
+\noindent
+\begin{tabular}{|p{4.0cm}|p{5.4cm}|p{6.0cm}|}
+\hline
+\textbf{Vulnerability:} & \textbf{Version 1 Flaw (Port 3000):} & \textbf{Version 2 Defense (Port 5000):} \\
+\hline
+SQL Injection & Dynamic string concatenation in login & Parameterized prepared statements \\
+\hline
+OS Command Injection & Direct shell invocation via \texttt{exec} & Parameterized array vector via \texttt{execFile} \\
+\hline
+Cross Site Scripting & Unsafe \texttt{innerHTML} rendering & DOMPurify sanitization and React auto-escaping \\
+\hline
+Cross Site Request Forgery & Ambient cookie validation without tokens & Cryptographic anti-CSRF tokens and SameSite cookies \\
+\hline
+\end{tabular}
+
+\vspace{12pt}
+\subsection*{6. Conclusion:}
+The implementation demonstrates that secure software engineering requires eliminating vulnerable assumptions across both client and server tiers. By combining token parameterization, input allow listing, output sanitization, strict cookie controls, and defensive process execution APIs, Version 2 achieves robust defense in depth across all four categories.
+
+\end{document}

@@ -5,6 +5,8 @@ node_modules/
 
 # Logs and system artifacts
 *.log
+*.aux
+*.out
 .DS_Store
 Thumbs.db
 
