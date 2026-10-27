@@ -112,9 +112,10 @@ router.post('/logout', authenticate, (req, res) => {
   return res.json({ message: 'Logged out successfully' });
 });
 
+//This does return active session user or null if unauthenticated without emitting 401 console errors.
 router.get('/me', authenticate, (req, res) => {
   if (!req.user) {
-    return res.status(401).json({ error: 'Not authenticated' });
+    return res.json({ user: null });
   }
   const db = getDB();
   const fresh = db.prepare('SELECT id, username, full_name, role, bio FROM users WHERE id = ?').get(req.user.id);
