@@ -55,6 +55,15 @@ if (require('fs').existsSync(clientDistPath)) {
   });
 }
 
-app.listen(PORT, () => {
+const server = app.listen(PORT, () => {
   console.log('IIIT Allahabad Open Source Community Forum Version 2 running on port ' + PORT);
+});
+
+server.on('error', (err) => {
+  if (err.code === 'EADDRINUSE') {
+    console.error('Error: Port ' + PORT + ' is already in use by an active server process.');
+    process.exit(1);
+  } else {
+    console.error('Server startup error:', err.message);
+  }
 });
